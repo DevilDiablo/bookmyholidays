@@ -24,12 +24,14 @@ class package(models.Model):
     pdestination = models.ForeignKey(destinations, on_delete=models.DO_NOTHING) 
     paccomudation = models.CharField(max_length=255)
     price = models.IntegerField()
+    days = models.IntegerField(null=True, blank=True)
     pimg = models.ImageField(null=True, blank=True,upload_to='pkgimg/')
     pimg1 = models.ImageField(null=True, blank=True,upload_to='pkgimg/')
     pimg2 = models.ImageField(null=True, blank=True,upload_to='pkgimg/')
 
     ratings = models.IntegerField(default=0)
-  
+    def __str__(self):
+        return self.pname
 class comment(models.Model):
     user = models.ForeignKey(userlogindata, on_delete=models.DO_NOTHING)
     coment = models.CharField(max_length=255)
@@ -39,8 +41,8 @@ class comment(models.Model):
 class Enquery(models.Model):
     user = models.ForeignKey(userlogindata, on_delete=models.DO_NOTHING)
     enquerys = models.CharField(max_length=255)
-    reply = models.CharField(max_length=255)
-    status = models.BooleanField(default=False)
+    reply = models.CharField(max_length=255,null=True, blank=True)
+    status = models.BooleanField(default=False,null=True, blank=True)
     startdate = models.DateField(auto_now=False, auto_now_add=True)
 
 class vehicle(models.Model):
@@ -48,9 +50,12 @@ class vehicle(models.Model):
     destination = models.ForeignKey(destinations, on_delete=models.DO_NOTHING) 
     vtype = models.CharField(max_length=50)
     seats = models.IntegerField()
+    pak = models.ForeignKey(package,on_delete=models.DO_NOTHING,null=True)
     vprice = models.IntegerField()
     vimg = models.ImageField(null=True, blank=True,upload_to='vehicleimg/')
-    mtype = models.ForeignKey(vehicletype, on_delete=models.DO_NOTHING) 
+    mtype = models.ForeignKey(vehicletype, on_delete=models.DO_NOTHING)
+    def __str__(self):
+        return self.name 
 
 class hotels(models.Model):
     hotelname = models.CharField(max_length=60)
@@ -58,6 +63,9 @@ class hotels(models.Model):
     ratings = models.IntegerField()
     price = models.IntegerField()
     himg = models.ImageField(null=True, blank=True,upload_to='hotelimg/')
+    def __str__(self):
+        return self.hotelname
+
 
 class mybookings(models.Model):
     user = models.ForeignKey(userlogindata, on_delete=models.DO_NOTHING)
@@ -67,7 +75,9 @@ class mybookings(models.Model):
     members = models.IntegerField()
     source = models.CharField(max_length=60)
     fromdate = models.DateField()
-    todate = models.DateField()
+    #todate = models.DateField()
+    status = models.BooleanField(default=False)
+
 
 
 

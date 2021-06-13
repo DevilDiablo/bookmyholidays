@@ -781,7 +781,29 @@ i.fa.fa-gift{
     -moz-background-size: cover;
     min-height:200px;
 }
+.banner-4 {
+    background: url(../images/13.jpg)no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    -moz-background-size: cover;
+    min-height:200px;
+}
+.banner-5 {
+    background: url(../images/3.jpg)no-repeat left,url(../images/1.jpg)no-repeat center,url(../images/6.jpg)no-repeat right;
+    background-size: 498px,498px,498px;
+    width: 1500px;
+    height: 230px;
+}
 .banner-2 h1 {
+    font-size: 50px;
+    margin-bottom: 40px;
+    padding: 2em 0 0;
+    text-align: center;
+    color: #fff;
+}
+.banner-4 h1 {
     font-size: 50px;
     margin-bottom: 40px;
     padding: 2em 0 0;

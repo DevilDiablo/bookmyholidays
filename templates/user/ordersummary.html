@@ -6,6 +6,12 @@
 <!DOCTYPE HTML>
 <html>
     <head>
+        
+		<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices. -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
+	  
+	    <meta id="meta" name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
@@ -22,17 +28,23 @@
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         
         <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+      
         <!-- Custom Theme files -->
         <script src="{% static 'js/all.min.js' %}"></script>
         <script src="{% static 'js/jquery-1.12.0.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="https://www.paypal.com/sdk/js?client-id=test"></script>
+
+        
         <!--animate-->
         <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css" media="all">
-            <script>
-                 new WOW().init();
-            </script>
+
+        
         <!--//end-animate-->
         </head>
+
+
+    
 <body>
     {% block content %}
 <!-- top-header -->
@@ -41,184 +53,250 @@
 		<h1 class="wow zoomIn animated animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: zoomIn;"></h1>
 	</div>
 </div>
+
+
+	 <style>
+        /* Media query for mobile viewport */
+        @media screen and (max-width: 400px) {
+            #paypal-button-container {
+                width: 100%;
+            }
+        }
+        
+        /* Media query for desktop viewport */
+        @media screen and (min-width: 400px) {
+            #paypal-button-container {
+                width: 250px;
+            }
+        }
+    </style>
+
+	 <script>
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+            style: {
+                layout: 'horizontal'
+            }
+        }).render('#paypal-button-container');
+    </script>
+      <script src="https://www.paypal.com/sdk/js?client-id=AdMjUGPGW_Bcqbb2wuMKxUHhlaXmzaom3FicI8vG9GSnGTquTFwdK8Z87t71kDJaaxZR9aw6b9HniigS&currency=USD&disable-funding=credit"></script>
+	  <script>
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+			style: {
+                layout: 'horizontal'
+            },
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '{{tusd}}'
+                                               }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Show a success message to the buyer
+                    alert('Transaction completed by {{mybookingid}} ' + details.payer.name.given_name + '!'+ data);
+               
+                    var url = "{% url 'booksucess' 123 %}";
+                    var id = '{{mybookingid}}'
+
+                 // Construct the full URL with "id"
+                     document.location.href = url.replace('123', id);
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>
+
+
 <!--- /banner ---->
 <!--- selectroom ---->
-<div class="selectroom">
-	<div class="container">	
-	
-<div class="selectroom_top">
-			<h2>Order Summary</h2>
-            <!-- This is for package -->
-                   
-			<div class="rom-btm">
-                <br>
-                <h3 style="padding-left: 2rem;">Package Selected</h3>
-                <hr>
-				<div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
-					<img src="{{ mybooking.pakage.pimg.url }}" class="img-responsive">
-				</div>
-				<div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
-					<h4>Package Name: {{mybooking.pakage.pname}}</h4>
-					<p><b>Package Location :</b>{{mybooking.pakage.pdestination}}</p>
-					<p><b>Features:</b>{{mybooking.pakage.paccomudation}} </p>
-                    <p><b>Members:</b>{{mybooking.members}} </p>
-
-
-				</div>
-				<div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
-					<h5>Rs. {{mybooking.pakage.price}}</h5>
-                    <a href="#" class="view">Edit</a>
-
-				</div>
-				<div class="clearfix"></div>
-			</div>
-                    <!-- This is for vehicle -->
-                    
-			<div class="rom-btm">
-                <br>
-                <h3 style="padding-left: 2rem;">Vehicle Selected</h3>
-                <hr>
-				<div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
-					<img src="{{ mybooking.mvehicle.vimg.url }}" class="img-responsive" alt="">
-				</div>
-				<div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
-					<h4>Traveler :{{mybooking.mvehicle.name}}</h4><br>
-					<p><b>Vehicle Type :</b>{{mybooking.mvehicle.vtype}}</p><br>
-					<p><b> Seats Available:</b>{{mybooking.mvehicle.seats}} </p><br>
-				</div>
-				<div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
-					<h5>Rs. {{mybooking.mvehicle.vprice}}</h5>
-                    <a href="#" class="view">Edit</a>
-
-				</div>
-				<div class="clearfix"></div>
-			</div>
-                    <!-- this is for Hotel -->
-                    <div class="rom-btm">
-                        <br>
-                        <h3 style="padding-left: 2rem;">Hotel Selected</h3>
-                        <hr>
-                        <div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
-                            <img src="{{ mybooking.mhotle.himg.url }}" class="img-responsive" alt="">
+<div class="container">
+    <div class="row">
+         <br>
+                <div class="col-md-12">
+                    <div class="col-md-4 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
+                        <!--REVIEW ORDER-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading text-center">
+                                <h4>Review Order</h4>
+                            </div>
+                            <div class="panel-body">
+                                    <div class="col-md-12">
+                                        <strong>Basic Price</strong>
+                                        <div class="pull-right"><span>Rs.</span><span>{{mybooking.pakage.price}}</span>  <hr></div>
+                                    </div>
+                                  
+                                    <div class="col-md-12">
+                                        <strong>Transportation Price</strong>
+                                        <div class="pull-right"><span> Rs.</span><span>{{tvprice}}</span>   <hr></div>
+                                    </div>
+                                   
+                                    <div class="col-md-12">
+                                        <strong>Accmodation</strong>
+                                        <div class="pull-right"><span> Rs.</span><span>{{thprice}}</span>  <hr class="btn-success"></div>
+                                        <hr class="btn-success">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <strong>Total</strong>
+                                        <div class="pull-right"><span>Rs.</span><span>{{tprice}}</span></div>
+                                        <hr>
+                                    </div>
+                                    <center>
+                                    <div id="paypal-button-container"></div>
+                                </center>                                    
+                            </div>
+                            
                         </div>
-                        <div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
-                            <h4>Hotel Name :{{mybooking.mhotle.hotelname}}</h4><br>
-                            <p><b>Location :</b>{{mybooking.mhotle.loaction}}</p><br>
-                            <p><b>Ratings :</b></p><br>
-
-                            {% if mybooking.mhotle.ratings == 1 %}
-                            <fieldset class="rating">
-                                <input type="radio"  /><label for="star5" title="Rocks!">5 stars</label>
-                                <input type="radio"  /><label for="star4" title="Pretty good">4 stars</label>
-                                <input type="radio"  /><label for="star3" title="Meh">3 stars</label>
-                                <input type="radio"  /><label for="star2" title="Kinda bad">2 stars</label>
-                                <input type="radio"  checked="checked" /><label for="star1" title="Sucks big time">1 star</label>
-                            </fieldset>
-                             {% endif %}
-                            {% if mybooking.mhotle.ratings == 2 %}
-                            <fieldset class="rating">
-                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
-                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
-                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
-                                <input type="radio" id="star2" name="rating" value="2" checked="checked"  /><label for="star2" title="Kinda bad">2 stars</label>
-                                <input type="radio" id="star1" name="rating" value="1"  /><label for="star1" title="Sucks big time">1 star</label>
-                            </fieldset>
-                            {% endif %}
-                            {% if mybooking.mhotle.ratings == 3 %}
-                            <fieldset class="rating">
-                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
-                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
-                                <input type="radio" id="star3" name="rating" value="3" checked="checked" /><label for="star3" title="Meh">3 stars</label>
-                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
-                                <input type="radio" id="star1" name="rating" value="1"  /><label for="star1" title="Sucks big time">1 star</label>
-                            </fieldset>
-                               {% endif %}
-                            {% if mybooking.mhotle.ratings == 4 %}
-                            <fieldset class="rating">
-                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
-                                <input type="radio" id="star4" name="rating" value="4" checked="checked"  /><label for="star4" title="Pretty good">4 stars</label>
-                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
-                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
-                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
-                            </fieldset> 
-                            {% endif %}
-                            {% if mybooking.mhotle.ratings == 5 %}
-                            <fieldset class="rating">
-                                <input type="radio" id="star5" name="rating" value="5" checked="checked"/><label for="star5" title="Rocks!">5 stars</label>
-                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
-                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
-                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
-                                <input type="radio" id="star1" name="rating" value="1"  /><label for="star1" title="Sucks big time">1 star</label>
-                            </fieldset>
+                        <!--REVIEW ORDER END-->
+                    </div>
+                    <div class="col-md-8 col-sm-6 col-xs-12 col-md-pull-6 col-sm-pull-6">
+                        <!--SHIPPING METHOD-->
+                        <div class="panel panel-default">
+                            <div class="panel-heading text-center"><h4>Order Summary</h4></div>
+                            <div class="panel-body">
+                               
+                                <div class="selectroom_left">
+                                   
+                                    <!-- This is for package -->
+                                           
+                                    <div class="rom-btm">
+                                        <br>
+                                        <h3 style="padding-left: 2rem;">Package Selected</h3>
+                                        <hr>
+                                        <div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
+                                            <img src="{{ mybooking.pakage.pimg.url }}" class="img-responsive">
+                                        </div>
+                                        <div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
+                                            <h4>Package Name: {{mybooking.pakage.pname}}</h4>
+                                            <p><b>Package Location :</b>{{mybooking.pakage.pdestination}}</p>
+                                            <p><b>Features:</b>{{mybooking.pakage.paccomudation}} </p>
+                                            <p><b>Members:</b>{{mybooking.members}} </p>
                         
-                            {% endif %}
+                        
+                                        </div>
+                                        <div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
+                                            <h5>Rs. {{mybooking.pakage.price}}</h5>
+                                            <a href="{% url 'editvehicle' mybooking.pakage.id mybooking.id  %}" class="view">Edit</a>
+                    
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                            <!-- This is for vehicle -->
+                                            
+                                    <div class="rom-btm">
+                                        <br>
+                                        <h3 style="padding-left: 2rem;">Vehicle Selected</h3>
+                                        <hr>
+                                        <div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
+                                            <img src="{{ mybooking.mvehicle.vimg.url }}" class="img-responsive" alt="">
+                                        </div>
+                                        <div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
+                                            <h4>Traveler :{{mybooking.mvehicle.name}}</h4><br>
+                                            <p><b>Vehicle Type :</b>{{mybooking.mvehicle.vtype}}</p><br>
+                                            <p><b> Seats Available:</b>{{mybooking.mvehicle.seats}} </p><br>
+                                        </div>
+                                        <div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
+                                            <h5>Rs. {{mybooking.mvehicle.vprice}}</h5>
+                        
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                            <!-- this is for Hotel -->
+                                            <div class="rom-btm">
+                                                <br>
+                                                <h3 style="padding-left: 2rem;">Hotel Selected</h3>
+                                                <hr>
+                                                <div class="col-md-3 room-left wow fadeInLeft animated" data-wow-delay=".5s">
+                                                    <img src="{{ mybooking.mhotle.himg.url }}" class="img-responsive" alt="">
+                                                </div>
+                                                <div class="col-md-6 room-midle wow fadeInUp animated" data-wow-delay=".5s">
+                                                    <h4>Hotel Name :{{mybooking.mhotle.hotelname}}</h4><br>
+                                                    <p><b>Location :</b>{{mybooking.mhotle.loaction}}</p><br>
+                                                    <p><b>Ratings :</b></p><br>
+                        
+                                                    {% if mybooking.mhotle.ratings == 1 %}
+                                                    <fieldset class="rating">
+                                                        <input type="radio"  /><label for="star5" title="Rocks!">5 stars</label>
+                                                        <input type="radio"  /><label for="star4" title="Pretty good">4 stars</label>
+                                                        <input type="radio"  /><label for="star3" title="Meh">3 stars</label>
+                                                        <input type="radio"  /><label for="star2" title="Kinda bad">2 stars</label>
+                                                        <input type="radio"  checked="checked" /><label for="star1" title="Sucks big time">1 star</label>
+                                                    </fieldset>
+                                                     {% endif %}
+                                                    {% if mybooking.mhotle.ratings == 2 %}
+                                                    <fieldset class="rating">
+                                                        <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                                                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                                                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+                                                        <input type="radio" id="star2" name="rating" value="2" checked="checked"  /><label for="star2" title="Kinda bad">2 stars</label>
+                                                        <input type="radio" id="star1" name="rating" value="1"  /><label for="star1" title="Sucks big time">1 star</label>
+                                                    </fieldset>
+                                                    {% endif %}
+                                                    {% if mybooking.mhotle.ratings == 3 %}
+                                                    <fieldset class="rating">
+                                                        <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                                                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                                                        <input type="radio" id="star3" name="rating" value="3" checked="checked" /><label for="star3" title="Meh">3 stars</label>
+                                                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                                                        <input type="radio" id="star1" name="rating" value="1"  /><label for="star1" title="Sucks big time">1 star</label>
+                                                    </fieldset>
+                                                       {% endif %}
+                                                    {% if mybooking.mhotle.ratings == 4 %}
+                                                    <fieldset class="rating">
+                                                        <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+                                                        <input type="radio" id="star4" name="rating" value="4" checked="checked"  /><label for="star4" title="Pretty good">4 stars</label>
+                                                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+                                                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                                                        <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+                                                    </fieldset> 
+                                                    {% endif %}
+                                                    {% if mybooking.mhotle.ratings == 5 %}
+                                                    <fieldset class="rating">
+                                                        <input type="radio" id="star5" name="rating" value="5" checked="checked"/><label for="star5" title="Rocks!">5 stars</label>
+                                                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+                                                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+                                                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+                                                        <input type="radio" id="star1" name="rating" value="1"  /><label for="star1" title="Sucks big time">1 star</label>
+                                                    </fieldset>
+                                                
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
+                                                    <h5>Rs. {{mybooking.mhotle.price}}</h5>
+                                                    <!-- <a href="{% url 'hotles' mybooking.id mybooking.mvehicle.id %}" class="view">Edit</a> -->
+                        
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            
+                                            <div class="rom-btm">
+                                            <div  class="col-md-2 room-right wow fadeInRight animated" data-wow-delay=".5s">
+                                            </div>
+                                            </div>
+                                          
+                        
+                                                </div>
+
+
+                            </div>
                         </div>
-                        <div class="col-md-3 room-right wow fadeInRight animated" data-wow-delay=".5s">
-                            <h5>Rs. {{mybooking.mhotle.price}}</h5>
-                            <a href="#" class="view">Edit</a>
-
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="rom-btm">
-                        <div class="col-md-8 wow fadeInUp animated" data-wow-delay=".5s">
-                            <br>
-                            <h3 style="padding-left: 2rem;"> Amount Summary</h3>
-
-                            <hr>
-                            <table border="1">
-                                <center>
-                                <tr>
-                                    <th>Traveler Name</th>
-                                    <th>Source</th>
-                                    <th>Destination</th>
-                                    <th>Members</th>
-                                    <th>From Date</th>
-                                    <th>To Date</th>
-
-                                </tr>
-                                <h4>                                <tr>
-                                    <td>{{mybooking.user}}</td>
-                                    <td>{{mybooking.source}}</td>
-                                    <td>{{mybooking.pakage.pdestination}}</td>
-                                    <td>{{mybooking.members}}</td>
-                                    <td>{{mybooking.fromdate}}</td>
-                                    <td>{{mybooking.todate}}</td>
-
-
-                                </tr>
-                            </h4>
-                        </center>
-                            </table>
-                      
-                        <br>
-                            <h3>Package Cost :  Rs. {{mybooking.pakage.price}} </h3><br>
-                            <h3>Vehicle Cost : {{mybooking.mvehicle.vprice}} X {{mybooking.members}} =  Rs. {{tvprice}} </h3><br>
-                            <h3>Hotel Cost : {{mybooking.mhotle.price}} X {{halfmem}} =  Rs. {{thprice}} </h3><br>
-                            
-
-                            
-                        </div>
-                       
-                        <div class="col-md-4 room-right wow fadeInRight animated" data-wow-delay=".5s">
-                            <br><br>
-                            <h5 class = "text-success"> Total Cost = Rs. {{tprice}}</h5>
-                            <br><br><br><br><br>
-                            
-                            <button class="btn btn-success">Book Now</button>
-
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="rom-btm">
-                    <div  class="col-md-2 room-right wow fadeInRight animated" data-wow-delay=".5s">
+                        <!--SHIPPING METHOD END-->
                     </div>
                     </div>
+                    </div>
+    </div> 
 
-	</div>
-</div>
-</div>
-
+ 
 <br>
 <br><br><br><br>
 <div class="copy-right">
@@ -235,6 +313,7 @@
 		<p class="wow zoomIn animated animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: zoomIn;">© 2017 TMS . All Rights Reserved </p>
 	</div>
 </div>
+
 {% endblock %}
 </body>
 </html>

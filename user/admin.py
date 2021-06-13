@@ -11,7 +11,7 @@ admin.site.register([
     destinations,
     vehicletype,
     hotels
-
+    
 
    
 

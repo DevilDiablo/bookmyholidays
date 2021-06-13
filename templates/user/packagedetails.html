@@ -30,6 +30,7 @@
             <script>
                  new WOW().init();
             </script>
+			
 		
         <!--//end-animate-->
         </head>
@@ -64,6 +65,7 @@
 
 			<div class="col-md-8 selectroom_right wow fadeInRight animated" data-wow-delay=".5s">
 				<h4>Package Name: {{package.pname}}</h4>
+				<h4>Duration : {{package.days}} days</h4>
 					<p><b>Package Location :</b>{{package.pdestination}}</p>
 					<p><b>Features:</p>
 							<div class="container1">
@@ -102,12 +104,7 @@
 				<input class="date" id="datepicker" type="date" placeholder="dd-mm-yyyy"  name="fromdate" required="">
 			</div>
 		
-			<div class="bnr-right">
-				<br>
-				<label class="inputLabel">To</label>
-				<input class="date" id="datepicker1" type="date" placeholder="dd-mm-yyyy" name="todate" required="">
-			</div>
-
+			
 			</div>
 						<div class="clearfix"></div>
 				<div class="grand">

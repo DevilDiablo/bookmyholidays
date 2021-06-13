@@ -1582,6 +1582,12 @@ pre code {
   margin-right: auto;
   margin-left: auto;
 }
+.container1 {
+  padding-right: 15px;
+  padding-left: 15px;
+  display: inline-block;
+ 
+}
 @media (min-width: 768px) {
   .container {
     width: 750px;
